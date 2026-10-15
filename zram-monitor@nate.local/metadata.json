@@ -1,0 +1,8 @@
+{
+  "uuid": "zram-monitor@nate.local",
+  "name": "ZRAM Monitor",
+  "description": "Shows live zram usage and compression ratio in the top bar",
+  "shell-version": ["51"],
+  "url": "https://github.com/ndilgard/gnome-zram-monitor",
+  "version": 1
+}
