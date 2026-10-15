@@ -8,6 +8,7 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js";
 import * as PanelMenu from "resource:///org/gnome/shell/ui/panelMenu.js";
 
 const ZRAM_MM_STAT = "/sys/block/zram0/mm_stat";
+const ZRAM_DISKSIZE = "/sys/block/zram0/disksize";
 const UPDATE_INTERVAL_SECONDS = 3;
 
 const ZramIndicator = GObject.registerClass(
@@ -56,7 +57,20 @@ const ZramIndicator = GObject.registerClass(
 
 				const ratio = (origSize / comprSize).toFixed(2);
 				const memUsedMiB = Math.round(memUsedTotal / 1024 / 1024);
-				return `zram: ${memUsedMiB}MiB (${ratio}x)`;
+
+				let percentText = "";
+				const [diskOk, diskContents] = GLib.file_get_contents(ZRAM_DISKSIZE);
+				if (diskOk) {
+					const diskSize = Number(
+						new TextDecoder().decode(diskContents).trim(),
+					);
+					if (diskSize > 0) {
+						const percent = Math.round((memUsedTotal / diskSize) * 100);
+						percentText = ` ${percent}%`;
+					}
+				}
+
+				return `zram: ${memUsedMiB}MiB (${ratio}x)${percentText}`;
 			} catch (e) {
 				return "zram: n/a";
 			}
