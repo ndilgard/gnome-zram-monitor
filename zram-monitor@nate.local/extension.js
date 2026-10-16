@@ -65,7 +65,7 @@ const ZramIndicator = GObject.registerClass(
 						new TextDecoder().decode(diskContents).trim(),
 					);
 					if (diskSize > 0) {
-						const percent = Math.round((memUsedTotal / diskSize) * 100);
+						const percent = ((memUsedTotal / diskSize) * 100).toFixed(1);
 						percentText = ` ${percent}%`;
 					}
 				}
